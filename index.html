@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pool Watcher - Atomize your mining monitoring</title>
+    
+    <!-- Google Fonts - Roboto -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a1a1a 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            width: 100%;
+        }
+
+        .hero-text h1 {
+            font-size: 4rem;
+            font-weight: 300;
+            line-height: 1.1;
+            margin-bottom: 2rem;
+            letter-spacing: -0.02em;
+        }
+
+        .app-buttons {
+            display: flex;
+            gap: 20px;
+            margin-top: 2rem;
+        }
+
+        .app-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 24px;
+            background-color: #000;
+            border: 2px solid #333;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #fff;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .app-button:hover {
+            background-color: #333;
+            transform: translateY(-2px);
+        }
+
+        .app-button i {
+            font-size: 24px;
+            margin-right: 12px;
+        }
+
+        .phone-mockup {
+            text-align: center;
+            position: relative;
+        }
+
+        .phone-frame {
+            width: 300px;
+            height: 600px;
+            background: linear-gradient(145deg, #333, #111);
+            border-radius: 35px;
+            padding: 20px;
+            margin: 0 auto;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #2c5364 0%, #203a43 50%, #0f2027 100%);
+            border-radius: 25px;
+            padding: 30px 20px;
+            color: white;
+            overflow-y: auto;
+        }
+
+        .app-header {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .total-paid {
+            font-size: 0.9rem;
+            color: #a0a0a0;
+            margin-bottom: 5px;
+        }
+
+        .balance {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-item {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .features {
+            position: absolute;
+            right: -200px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .feature-item {
+            background: rgba(255,255,255,0.9);
+            color: #333;
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-icon {
+            width: 30px;
+            height: 30px;
+            background: #4CAF50;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+        }
+
+        .feature-icon i {
+            color: white;
+        }
+
+        /* Features Section */
+        .features-section {
+            padding: 100px 0;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        .features-section h2 {
+            text-align: center;
+            font-size: 3rem;
+            font-weight: 300;
+            margin-bottom: 80px;
+            color: #2c3e50;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 60px;
+        }
+
+        .feature {
+            text-align: center;
+        }
+
+        .feature-icon-large {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 30px;
+            border: 2px solid #2c3e50;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: #2c3e50;
+            background: rgba(44, 62, 80, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .feature-icon-large:hover {
+            background: #2c3e50;
+            color: white;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(44, 62, 80, 0.2);
+        }
+
+        .feature h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .feature p {
+            color: #666;
+            line-height: 1.8;
+            max-width: 250px;
+            margin: 0 auto;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            background: linear-gradient(135deg, #2c5364 0%, #203a43 100%);
+            padding: 100px 0;
+        }
+
+        .contact-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .contact-section h2 {
+            font-size: 4rem;
+            font-weight: 300;
+            margin-bottom: 2rem;
+        }
+
+        .contact-info {
+            text-align: right;
+        }
+
+        .contact-label {
+            font-size: 0.9rem;
+            color: #a0a0a0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .contact-value {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+        }
+
+        .privacy-link {
+            color: #a0a0a0;
+            text-decoration: underline;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .privacy-link:hover {
+            color: #fff;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 40px;
+            }
+
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+
+            .features {
+                position: static;
+                transform: none;
+                margin-top: 40px;
+            }
+
+            .contact-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .contact-info {
+                text-align: center;
+            }
+
+            .contact-section h2 {
+                font-size: 2.5rem;
+            }
+
+            .app-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>Automize your mining monitoring</h1>
+                    
+                    <div class="app-buttons">
+                        <a href="#" class="app-button app-store">
+                            <i class="fab fa-apple"></i>
+                            Get it on the<br>App Store
+                        </a>
+                        <a href="#" class="app-button google-play">
+                            <i class="fab fa-google-play"></i>
+                            Get it on<br>Google Play
+                        </a>
+                    </div>
+                </div>
+
+                <div class="phone-mockup">
+                    <!-- Phone Image Placeholder - Replace src with your actual image path -->
+                    <img src="./main page (2).png" 
+     alt="Pool Watcher App Interface" 
+     style="width: 300px; height: 600px; border-radius: 35px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); object-fit: cover;" />
+
+                    <div class="features">
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                            <span>See real-time stats</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-coins"></i></div>
+                            <span>Multi-coin support</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-bell"></i></div>
+                            <span>Get notified when a worker is offline</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            <span>Hashrate monitoring</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+        <div class="container">
+            <h2>Pool Watcher Best Features</h2>
+            
+            <div class="features-grid">
+                <div class="feature">
+                    <div class="feature-icon-large"><i class="fas fa-battery-three-quarters"></i></div>
+                    <h3>Battery Saver</h3>
+                    <p>No background work to stay tuned about your wallets</p>
+                </div>
+                
+                <div class="feature">
+                    <div class="feature-icon-large"><i class="fas fa-bell"></i></div>
+                    <h3>Get notified when workers goes offline</h3>
+                    <p>Stay informed about your mining operations with instant notifications</p>
+                </div>
+                
+                <div class="feature">
+                    <div class="feature-icon-large"><i class="fas fa-wallet"></i></div>
+                    <h3>All your wallets in one place</h3>
+                    <p>Manage and monitor multiple cryptocurrency wallets seamlessly</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section">
+        <div class="container">
+            <div class="contact-content">
+                <div>
+                    <h2>Contact</h2>
+                </div>
+                
+                <div class="contact-info">
+                    <div class="contact-label"><i class="fas fa-envelope"></i> EMAIL</div>
+                    <div class="contact-value">support@poolwatcher.app</div>
+                    
+                    <a href="#" class="privacy-link"><i class="fas fa-shield-alt"></i> PRIVACY POLICY</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
